@@ -18,6 +18,9 @@ func FetchAllSchedules(c *gin.Context) {
 	resultschedules := db.FindAllSchedules()
 
 	// URLへのアクセスに対してJSONを返す
+	c.Header("Content-Type", "application/json")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Headers", "Content-Type")
 	c.JSON(200, resultschedules)
 }
 
@@ -30,6 +33,9 @@ func FindSchedule(c *gin.Context) {
 	resultschedule := db.FindSchedule(scheduleID)
 
 	// URLへのアクセスに対してJSONを返す
+	c.Header("Content-Type", "application/json")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Headers", "Content-Type")
 	c.JSON(200, resultschedule)
 }
 
@@ -48,6 +54,12 @@ func AddSchedule(c *gin.Context) {
 	}
 
 	db.InsertSchedule(&schedule)
+	// URLへのアクセスに対してJSONを返す
+	c.Header("Content-Type", "application/json")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Headers", "Content-Type")
+	c.JSON(200, "")
+
 }
 
 // スケジュールを変更する
@@ -68,6 +80,11 @@ func ChangeSchedule(c *gin.Context) {
 	}
 
 	db.UpdateStateschedule(scheduleID, &schedule)
+	// URLへのアクセスに対してJSONを返す
+	c.Header("Content-Type", "application/json")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Headers", "Content-Type")
+	c.JSON(200, "")
 }
 
 // スケジュールをDBから削除する
@@ -77,4 +94,10 @@ func DeleteSchedule(c *gin.Context) {
 	productID, _ := strconv.Atoi(productIDStr)
 
 	db.DeleteSchedule(productID)
+
+	// URLへのアクセスに対してJSONを返す
+	c.Header("Content-Type", "application/json")
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Headers", "Content-Type")
+	c.JSON(200, "")
 }
