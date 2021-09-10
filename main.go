@@ -4,8 +4,6 @@ import (
 	// ロギングを行うパッケージ
 	"log"
 
-	// HTTPを扱うパッケージ
-
 	// Gin
 	"github.com/gin-gonic/gin"
 

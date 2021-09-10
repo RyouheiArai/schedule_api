@@ -78,12 +78,13 @@ func InsertSchedule(registerschedule *entity.Schedule) {
 
 // UpdateStateschedule は スケジュールテーブルの指定したレコードの状態を変更する
 func UpdateStateschedule(scheduleID int, registerschedule *entity.Schedule) {
-	schedule := []entity.Schedule{}
 
 	db := open()
+
 	// update
-	db.Model(&schedule).Where("ID = ?", scheduleID).Update(schedule)
+	db.Model(&registerschedule).Where("ID = ?", scheduleID).Update(registerschedule)
 	defer db.Close()
+
 }
 
 // DeleteSchedule は スケジュールテーブルの指定したレコードを削除する

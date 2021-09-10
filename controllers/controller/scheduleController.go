@@ -26,7 +26,7 @@ func FetchAllSchedules(c *gin.Context) {
 
 // Findschedule は 指定したIDのスケジュール情報を取得する
 func FindSchedule(c *gin.Context) {
-	scheduleIDStr := c.Query("scheduleID")
+	scheduleIDStr := c.Query("scheduleId")
 
 	scheduleID, _ := strconv.Atoi(scheduleIDStr)
 
@@ -64,8 +64,7 @@ func AddSchedule(c *gin.Context) {
 
 // スケジュールを変更する
 func ChangeSchedule(c *gin.Context) {
-	scheduleIDStr := c.PostForm("ID")
-	scheduleID, _ := strconv.Atoi(scheduleIDStr)
+	scheduleID, _ := strconv.Atoi(c.PostForm("scheduleId"))
 
 	scheduleName := c.PostForm("scheduleName")
 	scheduleMemo := c.PostForm("scheduleMemo")
@@ -89,11 +88,9 @@ func ChangeSchedule(c *gin.Context) {
 
 // スケジュールをDBから削除する
 func DeleteSchedule(c *gin.Context) {
-	productIDStr := c.PostForm("productID")
+	scheduleID, _ := strconv.Atoi(c.PostForm("scheduleId"))
 
-	productID, _ := strconv.Atoi(productIDStr)
-
-	db.DeleteSchedule(productID)
+	db.DeleteSchedule(scheduleID)
 
 	// URLへのアクセスに対してJSONを返す
 	c.Header("Content-Type", "application/json")
