@@ -4,8 +4,11 @@ import (
 	// フォーマットI/O
 	"fmt"
 
+	"os"
+
 	// Go言語のORM
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 
 	// エンティティ(データベースのテーブルの行に対応)
 	entity "SCH/models/entity"
@@ -13,11 +16,17 @@ import (
 
 // DB接続する
 func open() *gorm.DB {
-	DBMS := "mysql"
-	USER := "root"
-	PASS := "root"
-	PROTOCOL := "tcp(localhost:3306)"
-	DBNAME := "Schedule"
+
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	DBMS := os.Getenv("DB_MS")
+	USER := os.Getenv("DB_USER")
+	PASS := os.Getenv("DB_PASS")
+	PROTOCOL := os.Getenv("DB_PROTOCOL")
+	DBNAME := os.Getenv("DB_NAME")
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
 	db, err := gorm.Open(DBMS, CONNECT)
 

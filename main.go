@@ -1,11 +1,12 @@
 package main
 
 import (
-	// ロギングを行うパッケージ
-	"log"
+	"os"
 
 	// Gin
 	"github.com/gin-gonic/gin"
+
+	"github.com/joho/godotenv"
 
 	// MySQL用ドライバ
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -38,7 +39,18 @@ func serve() {
 	// // スケジュールを削除する
 	router.POST("/deleteschedule", controller.DeleteSchedule)
 
-	if err := router.Run(":3000"); err != nil {
-		log.Fatal("Server Run Failed.: ", err)
+	// if err := router.Run(":5000"); err != nil {
+	// 	log.Fatal("Server Run Failed.: ", err)
+	// }
+
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	port := os.Getenv("PORT")
+
+	if err := router.Run(":" + port); err != nil {
+		panic(err)
 	}
 }
