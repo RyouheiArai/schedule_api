@@ -23,9 +23,9 @@ func main() {
 	config := cors.DefaultConfig()
 	config.AllowHeaders = append(config.AllowHeaders, "Authorization")
 	if gin.Mode() == gin.DebugMode {
-		config.AllowOrigins = []string{"http://localhost:5000"}
+		config.AllowOrigins = []string{"http://localhost:8080"}
 	} else {
-		config.AllowOrigins = []string{"https://go-sch.herokuapp.com"}
+		config.AllowOrigins = []string{"https://vue-sch.web.app/"}
 	}
 
 	database.Initialize()
