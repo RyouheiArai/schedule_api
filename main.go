@@ -1,56 +1,56 @@
 package main
 
 import (
+	"log"
 	"os"
+	"schapi/database"
+	"schapi/endpoint/authapi"
+	"schapi/endpoint/scheduleapi"
 
-	// Gin
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-
 	"github.com/joho/godotenv"
-
-	// MySQL用ドライバ
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	// コントローラー
-	controller "SCH/controllers/controller"
 )
 
 func main() {
-	// サーバーを起動する
-	serve()
-}
+	if gin.Mode() == gin.DebugMode {
+		if err := godotenv.Load(".env"); err != nil {
+			panic(err)
+		}
+	}
 
-func serve() {
-	// デフォルトのミドルウェアでginのルーターを作成
-	// Logger と アプリケーションクラッシュをキャッチするRecoveryミドルウェア を保有しています
 	router := gin.Default()
+	config := cors.DefaultConfig()
+	config.AllowHeaders = append(config.AllowHeaders, "Authorization")
+	if gin.Mode() == gin.DebugMode {
+		config.AllowOrigins = []string{"http://localhost:5000"}
+	} else {
+		config.AllowOrigins = []string{"https://go-sch.herokuapp.com"}
+	}
 
-	// // 全てのスケジュールのJSONを返す
-	router.GET("/fetchAllschedules", controller.FetchAllSchedules)
+	database.Initialize()
 
-	// // １つのスケジュールの状態のJSONを返す
-	router.GET("/fetchschedule", controller.FindSchedule)
+	router.Use(cors.New(config))
 
-	// // スケジュールをDBへ登録する
-	router.POST("/addschedule", controller.AddSchedule)
+	// Api
+	api := router.Group("/api")
+	{
+		authapi.SetupRoute(api)
 
-	// スケジュールを変更する
-	router.POST("/changeschedule", controller.ChangeSchedule)
-
-	// // スケジュールを削除する
-	router.POST("/deleteschedule", controller.DeleteSchedule)
-
-	// if err := router.Run(":5000"); err != nil {
-	// 	log.Fatal("Server Run Failed.: ", err)
-	// }
-
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
+		// 認証必要なエンドポイント
+		api.Use(authapi.MiddlewareFunc())
+		{
+			authapi.SetupAuthenticatedRoute(api)
+			scheduleapi.SetupRoute(api)
+		}
 	}
 
 	port := os.Getenv("PORT")
-
-	if err := router.Run(":" + port); err != nil {
-		panic(err)
+	if port == "" {
+		port = "8080"
+	}
+	err := router.Run(":" + port)
+	if err != nil {
+		log.Fatal(err.Error())
 	}
 }
