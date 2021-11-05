@@ -9,23 +9,17 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	if gin.Mode() == gin.DebugMode {
-		if err := godotenv.Load(".env"); err != nil {
-			panic(err)
-		}
-	}
 
 	router := gin.Default()
 	config := cors.DefaultConfig()
 	config.AllowHeaders = append(config.AllowHeaders, "Authorization")
-	if gin.Mode() == gin.DebugMode {
-		config.AllowOrigins = []string{"http://localhost:8080"}
-	} else {
-		config.AllowOrigins = []string{"https://vue-sch.web.app/"}
+
+	config.AllowOrigins = []string{
+		"http://localhost:8080",
+		"https://vue-sch.web.app",
 	}
 
 	database.Initialize()
@@ -46,9 +40,6 @@ func main() {
 	}
 
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
 	err := router.Run(":" + port)
 	if err != nil {
 		log.Fatal(err.Error())
