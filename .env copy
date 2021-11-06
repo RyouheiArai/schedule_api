@@ -1,6 +1,6 @@
 DB_MS=mysql
-DB_USER=bce37591298af0
-DB_PASS=f29de360
-DB_NAME=heroku_452a977b8f2608e
-DB_PROTOCOL=tcp(us-cdbr-east-04.cleardb.com:3306)
+DB_USER=user
+DB_PASS=12345
+DB_NAME=demo
+DB_PROTOCOL=tcp(xxxxx:3306)
 PORT=5000
